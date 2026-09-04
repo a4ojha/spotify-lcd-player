@@ -111,7 +111,6 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   MX_TIM11_Init();
-
   /* USER CODE BEGIN 2 */
   widget_init();
   HAL_TIM_Base_Start_IT(&htim11);

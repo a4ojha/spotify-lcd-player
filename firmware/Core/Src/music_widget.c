@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 uint8_t prev_icon[8] = {   
     0b10001,
     0b10011,
@@ -61,6 +60,11 @@ uint8_t block_icon[8] = {
 };
 
 int TOTAL_PROG_BAR_CELLS = 14;
+
+static void display_line(char *str, int row, int *offset);
+static void update_song(char *title, char *artist);
+static void update_progress_bar(int progress);
+static void update_play_pause_icon(int is_playing);
 
 static char g_title[64]  = "";
 static char g_artist[64] = "";

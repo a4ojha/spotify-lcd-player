@@ -1,5 +1,5 @@
 .vscode/
-.launch/
+**.launch
 Debug/
 .metadata/
 .settings/
