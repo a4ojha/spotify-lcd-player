@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "i2c-lcd.h"
+#include "music_widget.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -101,10 +102,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  lcd_init();
-  lcd_clear();
-  lcd_put_cur(0, 0);
-
+  widget_init();
 
   uint8_t rx_byte; 		// incoming byte
   char lcd_line[21]; 	// 20-length string, with null terminator

@@ -11,3 +11,5 @@ void lcd_send_string (char *str);  // send string to the lcd
 void lcd_put_cur(int row, int col);  // put cursor at the entered position row (0 or 1), col (0-15);
 
 void lcd_clear (void);
+
+void lcd_create_char(uint8_t location, uint8_t bitmap[]);

@@ -1,11 +1,13 @@
 #include "i2c-lcd.h"
+#include <stdio.h>
+
 extern I2C_HandleTypeDef hi2c1;
 
 #define SLAVE_ADDRESS_LCD 0x4E
 
 void lcd_send_cmd (char cmd)
 {
-  char data_u, data_l;
+  	char data_u, data_l;
 	uint8_t data_t[4];
 	data_u = (cmd&0xf0);
 	data_l = ((cmd<<4)&0xf0);
@@ -40,15 +42,18 @@ void lcd_clear (void)
 
 void lcd_put_cur(int row, int col)
 {
+    uint8_t base;
     switch (row)
     {
-        case 0: col |= 0x80; break;
-        case 1: col |= 0xC0; break;
-		case 2: col |= 0x94; break;
-        case 3: col |= 0xD4; break;
+        case 0: base = 0x80; break;
+        case 1: base = 0xC0; break;
+        case 2: base = 0x94; break;
+        case 3: base = 0xD4; break;
+        default: base = 0x80; break;
     }
-
-    lcd_send_cmd (col);
+    uint8_t addr = base + (uint8_t)col;
+    printf("row=%d col=%d base=0x%02X addr=0x%02X\r\n", row, col, base, addr);
+    lcd_send_cmd(addr);
 }
 
 
@@ -81,4 +86,12 @@ void lcd_init (void)
 void lcd_send_string (char *str)
 {
 	while (*str) lcd_send_data (*str++);
+}
+
+void lcd_create_char(uint8_t location, uint8_t bitmap[])
+{
+    location &= 0x07;                    	// only slots 0-7 valid
+    lcd_send_cmd(0x40 | (location << 3)); 	// point to CGRAM slot
+    for (int i = 0; i < 8; i++)
+        lcd_send_data(bitmap[i]);        	// write the 8 pixel rows
 }
