@@ -52,6 +52,12 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 volatile uint8_t scroll_due = 0;
+volatile uint8_t msg_ready = 0;
+
+uint8_t rx_byte; 		    // incoming byte
+char rcvd_message[128]; // title|artist|progress|is_playing
+int idx = 0;			      // current char index
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,9 +111,11 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   MX_TIM11_Init();
+
   /* USER CODE BEGIN 2 */
   widget_init();
   HAL_TIM_Base_Start_IT(&htim11);
+  HAL_UART_Receive_IT(&huart2, &rx_byte, 1); // nonblocking UART listener
 
   /* USER CODE END 2 */
 
@@ -117,7 +125,12 @@ int main(void)
   {
     if (scroll_due) {
         scroll_due = 0;
-        widget_render_frame();
+        widget_render_scroll();
+    }
+
+    if (msg_ready) {
+        msg_ready = 0;
+        widget_handle_message(rcvd_message);
     }
     /* USER CODE END WHILE */
 
@@ -310,7 +323,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-// Handle 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if (htim->Instance == TIM11)   
@@ -318,6 +330,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         scroll_due = 1;
     }
 }
+
+// Handle UART receipt interrupt
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+  if (huart->Instance == USART2) {
+    if (rx_byte == '\n' || rx_byte == '\r') {
+        rcvd_message[idx] = '\0';
+        msg_ready = 1;
+        idx = 0;
+    }
+    else if (idx < sizeof(rcvd_message) - 1) {
+        rcvd_message[idx++] = rx_byte;
+    }
+
+    HAL_UART_Receive_IT(&huart2, &rx_byte, 1);
+  }
+}
+
 /* USER CODE END 4 */
 
 /**
