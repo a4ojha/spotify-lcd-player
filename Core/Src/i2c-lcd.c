@@ -42,12 +42,10 @@ void lcd_put_cur(int row, int col)
 {
     switch (row)
     {
-        case 0:
-            col |= 0x80;
-            break;
-        case 1:
-            col |= 0xC0;
-            break;
+        case 0: col |= 0x80; break;
+        case 1: col |= 0xC0; break;
+		case 2: col |= 0x94; break;
+        case 3: col |= 0xD4; break;
     }
 
     lcd_send_cmd (col);
