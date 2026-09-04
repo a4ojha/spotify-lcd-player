@@ -5,9 +5,9 @@ extern I2C_HandleTypeDef hi2c1;
 
 #define SLAVE_ADDRESS_LCD 0x4E
 
-void lcd_send_cmd (char cmd)
+void lcd_send_cmd (uint8_t cmd)
 {
-  	char data_u, data_l;
+  	uint8_t data_u, data_l;
 	uint8_t data_t[4];
 	data_u = (cmd&0xf0);
 	data_l = ((cmd<<4)&0xf0);
@@ -18,9 +18,9 @@ void lcd_send_cmd (char cmd)
 	HAL_I2C_Master_Transmit (&hi2c1, SLAVE_ADDRESS_LCD,(uint8_t *) data_t, 4, 100);
 }
 
-void lcd_send_data (char data)
+void lcd_send_data (uint8_t data)
 {
-	char data_u, data_l;
+	uint8_t data_u, data_l;
 	uint8_t data_t[4];
 	data_u = (data&0xf0);
 	data_l = ((data<<4)&0xf0);
@@ -52,7 +52,6 @@ void lcd_put_cur(int row, int col)
         default: base = 0x80; break;
     }
     uint8_t addr = base + (uint8_t)col;
-    printf("row=%d col=%d base=0x%02X addr=0x%02X\r\n", row, col, base, addr);
     lcd_send_cmd(addr);
 }
 

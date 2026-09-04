@@ -104,33 +104,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
   widget_init();
 
-  uint8_t rx_byte; 		// incoming byte
-  char lcd_line[21]; 	// 20-length string, with null terminator
-  int idx = 0;			// current char index
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // Receive data from UART, display on LCD:
-	  if (HAL_UART_Receive(&huart2, &rx_byte, 1, HAL_MAX_DELAY) == HAL_OK) {
-		  // end of line, user finished typing string
-		  if (rx_byte == '\r' || rx_byte == '\n') {
-			  if (idx > 0) {
-				  lcd_line[idx] = '\0';
-				  lcd_clear();
-				  lcd_put_cur(0, 0);
-				  lcd_send_string(lcd_line);
-				  idx = 0;
-			  }
-		  }
-		  else {
-			  lcd_line[idx++] = rx_byte;
-		  }
-	  }
-
+    widget_render_frame();
+    HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
