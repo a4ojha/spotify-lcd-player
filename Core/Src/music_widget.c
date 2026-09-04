@@ -47,8 +47,8 @@ uint8_t block_icon[8] = {
     0b11111
 };
 
-static char g_title[]  = "Kiss of Life";
-static char g_artist[] = "Sade";
+static char g_title[]  = "Indecision (feat. Daniel Caesar)";
+static char g_artist[] = "Rex Orange County";
 
 void widget_init(void)
 {

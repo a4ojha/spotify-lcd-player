@@ -94,6 +94,7 @@ LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
  
+
 /* Call static constructors */
     bl __libc_init_array
 /* Call the application's entry point.*/
