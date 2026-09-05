@@ -56,7 +56,7 @@ uint8_t block_icon[8] = {
     0b11111,
     0b11111,
     0b11111,
-    0b11111
+    0b00000
 };
 
 int TOTAL_PROG_BAR_CELLS = 14;
