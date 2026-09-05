@@ -310,7 +310,7 @@ def main():
     uart = None
     last_message = None
 
-    log(f"polling every {POLL_SECONDS:g}s, writing to {SERIAL_PORT} @ {BAUD_RATE}")
+    print(f"polling every {POLL_SECONDS:g}s, writing to {SERIAL_PORT} @ {BAUD_RATE}")
     while True:
         try:
             if uart is None:
