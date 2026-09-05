@@ -31,7 +31,7 @@ REDIRECT_URI = f"http://{REDIRECT_HOST}:{REDIRECT_PORT}/callback"
 SCOPE = "user-read-playback-state"
 TOKEN_FILE = os.path.join(CWD, ".spotify_token.json")
 
-SERIAL_PORT = os.environ.get("SPOTIFY_LCD_PORT", "COM3")
+SERIAL_PORT = os.environ.get("ST_LINK_UART_PORT")
 BAUD_RATE = 115200
 
 POLL_SECONDS = 1
@@ -303,6 +303,10 @@ def main():
             f"No SPOTIFY_CLIENT_ID found. Put it in {os.path.join(CWD, '.env')}\n"
             f"Then add {REDIRECT_URI} to the app's Redirect URIs in the Spotify dashboard."
         )
+    if not SERIAL_PORT:
+        sys.exit(
+            f"No ST_LINK_UART_PORT found. Find the correct COM port and put it in {os.path.join(CWD, '.env')}\n"
+        )
 
     tokens = TokenStore()
     tokens.token()
@@ -321,7 +325,7 @@ def main():
             try:
                 message = build_message(fetch_playback(tokens))
             except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-                log(f"spotify poll failed: {exc}")
+                print(f"spotify poll failed: {exc}")
                 time.sleep(POLL_SECONDS)
                 continue
 
@@ -332,7 +336,7 @@ def main():
                 log(f"tx {message.rstrip()}")
 
         except serial.SerialException as exc:
-            log(f"serial error: {exc}; retrying")
+            print(f"serial error: {exc}; retrying")
             if uart is not None:
                 try:
                     uart.close()
